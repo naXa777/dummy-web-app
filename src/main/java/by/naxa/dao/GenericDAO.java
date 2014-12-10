@@ -48,11 +48,28 @@ public class GenericDAO<T> extends AbstractDAO {
 	}
 
 	/**
-	 * Find all objects of the specified type in the DB.
+	 * Find an object by its name.
+	 * @param name
+	 * @return
+	 */
+	public List<T> findAll(String name) {
+		return (List<T>) super.selectAll(clazz, "Name", name);
+	}
+
+
+	/**
+	 * Fetch the whole table from the DB.
 	 * @return
 	 */
 	public List<T> findAll() {
 		return (List<T>) super.selectAll(clazz);
 	}
 
+	/**
+	 * Check the table for emptiness.
+	 * @return
+	 */
+	public boolean isEmpty() {
+		return super.isEmpty(clazz);
+	}
 }

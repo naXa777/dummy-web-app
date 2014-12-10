@@ -3,10 +3,8 @@ package by.naxa.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * POJO Rate.
@@ -14,6 +12,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "Rate")
+@NoArgsConstructor
 public @Data class Rate {
 
 	@Id
@@ -25,6 +24,6 @@ public @Data class Rate {
 
 	@NonNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "student_id", nullable = false)
+	@JoinColumn(name = "Student_id", nullable = false)
 	private Student student;
 }

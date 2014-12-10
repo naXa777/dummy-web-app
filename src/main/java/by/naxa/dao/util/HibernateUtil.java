@@ -1,4 +1,4 @@
-package by.naxa.dao;
+package by.naxa.dao.util;
 
 import by.naxa.WelcomeController;
 import org.hibernate.SessionFactory;
@@ -44,12 +44,7 @@ public class HibernateUtil {
 	public static void shutdown() {
 		// Close caches and connection pools
 		getSessionFactory().close();
+		logger.info("-shutdown()");
 	}
 
-	/**
-	 * Hidden constructor.
-	 */
-	/*private HibernateUtil() throws IllegalAccessException {
-		throw new IllegalAccessException("It shouldn't be instantiated!");
-	}*/
 }

@@ -1,12 +1,11 @@
 package by.naxa.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "Student")
 @NoArgsConstructor
-@RequiredArgsConstructor
+@EqualsAndHashCode(exclude = {"id", "photo", "rates"})
 public @Data class Student {
 
 	@Id
@@ -24,16 +23,25 @@ public @Data class Student {
 	private Long id;
 
 	@NonNull
-	@Column(name = "Name", nullable = false)
+	@Column(name = "Name",
+			nullable = false,
+			unique = true)
 	private String name;
 
 	@Lob
+	@Column(name = "Photo")
 	private byte[] photo;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "student")
+	@OneToMany(
+			fetch = FetchType.LAZY,
+			mappedBy = "student",
+			orphanRemoval = true,
+			cascade = javax.persistence.CascadeType.ALL)
 	private List<Rate> rates;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "faculty_id", nullable = false)
+	@JoinColumn(
+			name = "Faculty_id",
+			nullable = false)
 	private Faculty faculty;
 }

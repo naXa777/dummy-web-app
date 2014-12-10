@@ -1,9 +1,6 @@
 package by.naxa.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.List;
 @Table
 @NoArgsConstructor
 @RequiredArgsConstructor
+@EqualsAndHashCode(exclude = {"id", "students"})
 public @Data class Faculty {
 
 	@Id
@@ -23,10 +21,14 @@ public @Data class Faculty {
 	private Long id;
 
 	@NonNull
-	@Column(name = "Name", nullable = false)
+	@Column(name = "Name",
+			nullable = false,
+			unique = true)
 	private String name;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "faculty")
+	@OneToMany(
+			fetch = FetchType.LAZY,
+			mappedBy = "faculty")
 	private List<Student> students;
 
 }
