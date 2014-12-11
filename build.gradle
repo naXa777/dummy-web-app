@@ -2,9 +2,9 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'idea'
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.7
 targetCompatibility = 1.7
-//version = '1.0'
+version = '1.0'
 
 idea {
     module {
@@ -26,7 +26,7 @@ dependencies {
     compile group: 'org.hibernate', name: 'hibernate-core', version: '4.3.7.Final'  // use 4.2.2 ?
     compile group: 'org.projectlombok', name: 'lombok', version: '1.14.8'
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
-    compile group: 'javax.validation', name: 'validation-api', version: '1.1.0.Final'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.3.2'
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.7'
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.34'
 }

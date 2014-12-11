@@ -2,8 +2,6 @@ package by.naxa.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,15 +12,13 @@ import java.util.List;
  */
 @Entity
 @Table(name = "Student")
-@NoArgsConstructor
-@EqualsAndHashCode(exclude = {"id", "photo", "rates"})
+@EqualsAndHashCode(exclude = {"id", "photo", "rates", "faculty"})
 public @Data class Student {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NonNull
 	@Column(name = "Name",
 			nullable = false,
 			unique = true)
@@ -33,15 +29,16 @@ public @Data class Student {
 	private byte[] photo;
 
 	@OneToMany(
-			fetch = FetchType.LAZY,
+			fetch = FetchType.EAGER,
 			mappedBy = "student",
 			orphanRemoval = true,
 			cascade = javax.persistence.CascadeType.ALL)
 	private List<Rate> rates;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(
 			name = "Faculty_id",
 			nullable = false)
 	private Faculty faculty;
+
 }

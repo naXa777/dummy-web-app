@@ -53,7 +53,7 @@ public class GenericDAO<T> extends AbstractDAO {
 	 * @return
 	 */
 	public List<T> findAll(String name) {
-		return (List<T>) super.selectAll(clazz, "Name", name);
+		return (List<T>) super.selectAll(clazz, "name", name);
 	}
 
 

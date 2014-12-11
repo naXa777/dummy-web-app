@@ -1,14 +1,13 @@
 package by.naxa.dao;
 
 import by.naxa.dao.util.HibernateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,9 +17,8 @@ import java.util.List;
  * @see org.hibernate.Session
  * Created by phomal on 09.12.2014.
  */
+@Slf4j
 public abstract class AbstractDAO {
-
-	private static final Logger logger = LoggerFactory.getLogger(AbstractDAO.class);
 
 	private Session session;
 	private Transaction transaction;
@@ -28,37 +26,37 @@ public abstract class AbstractDAO {
 	protected AbstractDAO() {}
 
 	protected void doSaveOrUpdate(Object obj) {
-		logger.info("+doSaveOrUpdate()");
+		log.info("+doSaveOrUpdate()");
 		try {
 			startOperation();
 			session.saveOrUpdate(obj);
-			logger.info("doSaveOrUpdate(): saved");
+			log.info("doSaveOrUpdate(): saved");
 			transaction.commit();
-			logger.info("doSaveOrUpdate(): committed");
+			log.info("doSaveOrUpdate(): committed");
 		} catch (HibernateException exc) {
 			if (transaction != null) transaction.rollback();
 			throw exc;
 		} finally {
 			session.close();
 		}
-		logger.info("-doSaveOrUpdate()");
+		log.info("-doSaveOrUpdate()");
 	}
 
 	protected void doMerge(Object obj) {
-		logger.info("+doSaveOrUpdate()");
+		log.info("+doSaveOrUpdate()");
 		try {
 			startOperation();
 			session.saveOrUpdate(obj);
-			logger.info("doSaveOrUpdate(): saved");
+			log.info("doSaveOrUpdate(): saved");
 			transaction.commit();
-			logger.info("doSaveOrUpdate(): committed");
+			log.info("doSaveOrUpdate(): committed");
 		} catch (HibernateException exc) {
 			if (transaction != null) transaction.rollback();
 			throw exc;
 		} finally {
 			session.close();
 		}
-		logger.info("-doSaveOrUpdate()");
+		log.info("-doSaveOrUpdate()");
 	}
 
 	protected void doDelete(Object obj) {
@@ -166,9 +164,9 @@ public abstract class AbstractDAO {
 	}
 
 	private void startOperation() {
-		logger.info("+startOperation()");
+		log.info("+startOperation()");
 		session = HibernateUtil.getSessionFactory().openSession();
 		transaction = session.beginTransaction();
-		logger.info("-startOperation()");
+		log.info("-startOperation()");
 	}
 }

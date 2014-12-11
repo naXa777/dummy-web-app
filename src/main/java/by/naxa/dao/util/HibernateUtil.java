@@ -1,20 +1,17 @@
 package by.naxa.dao.util;
 
-import by.naxa.WelcomeController;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Handy utility class.
  * <p />
  * Created by phomal on 02.12.2014.
  */
-public class HibernateUtil {
-
-	private static final Logger logger = LoggerFactory.getLogger(WelcomeController.class);
+@Slf4j
+public abstract class HibernateUtil {
 
 	private static final SessionFactory sessionFactory;
 	static {
@@ -32,19 +29,23 @@ public class HibernateUtil {
 			sessionFactory = configuration.buildSessionFactory(registry);*/
 		} catch (Throwable ex) {
 			// Make sure you log the exception, as it might be swallowed
-			logger.error("Initial SessionFactory creation failed." + ex);
+			log.error("Initial SessionFactory creation failed." + ex);
 			throw new ExceptionInInitializerError(ex);
 		}
 	}
 
+	/**
+	 * @see org.hibernate.SessionFactory
+	 */
 	public static synchronized SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
+	/**
+	 * Close caches and connection pools
+	 */
 	public static void shutdown() {
-		// Close caches and connection pools
 		getSessionFactory().close();
-		logger.info("-shutdown()");
 	}
 
 }
