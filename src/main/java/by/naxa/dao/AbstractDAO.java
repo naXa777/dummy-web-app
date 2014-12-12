@@ -2,7 +2,6 @@ package by.naxa.dao;
 
 import by.naxa.dao.util.HibernateUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -26,49 +25,41 @@ public abstract class AbstractDAO {
 	protected AbstractDAO() {}
 
 	protected void doSaveOrUpdate(Object obj) {
-		log.info("+doSaveOrUpdate()");
 		try {
 			startOperation();
 			session.saveOrUpdate(obj);
-			log.info("doSaveOrUpdate(): saved");
-			transaction.commit();
-			log.info("doSaveOrUpdate(): committed");
+			execute();
 		} catch (HibernateException exc) {
-			if (transaction != null) transaction.rollback();
+			rollback();
 			throw exc;
 		} finally {
-			session.close();
+			finishOperation();
 		}
-		log.info("-doSaveOrUpdate()");
 	}
 
 	protected void doMerge(Object obj) {
-		log.info("+doSaveOrUpdate()");
 		try {
 			startOperation();
 			session.saveOrUpdate(obj);
-			log.info("doSaveOrUpdate(): saved");
-			transaction.commit();
-			log.info("doSaveOrUpdate(): committed");
+			execute();
 		} catch (HibernateException exc) {
-			if (transaction != null) transaction.rollback();
+			rollback();
 			throw exc;
 		} finally {
-			session.close();
+			finishOperation();
 		}
-		log.info("-doSaveOrUpdate()");
 	}
 
 	protected void doDelete(Object obj) {
 		try {
 			startOperation();
 			session.delete(obj);
-			transaction.commit();
+			execute();
 		} catch (HibernateException exc) {
-			if (transaction != null) transaction.rollback();
+			rollback();
 			throw exc;
 		} finally {
-			session.close();
+			finishOperation();
 		}
 	}
 
@@ -82,12 +73,12 @@ public abstract class AbstractDAO {
 		try {
 			startOperation();
 			obj = session.get(clazz, id);
-			transaction.commit();
+			execute();
 		} catch (HibernateException exc) {
-			if (transaction != null) transaction.rollback();
+			rollback();
 			throw exc;
 		} finally {
-			session.close();
+			finishOperation();
 		}
 		return obj;
 	}
@@ -102,41 +93,20 @@ public abstract class AbstractDAO {
 		List objects = null;
 		try {
 			startOperation();
-			objects = session.createCriteria(clazz).list();
-			transaction.commit();
+			//objects = session.createCriteria(clazz).list();
+			objects = session.createQuery("From " + clazz.getName()).list();
+			execute();
 		} catch (HibernateException exc) {
-			if (transaction != null) transaction.rollback();
+			rollback();
 			throw exc;
 		} finally {
-			session.close();
+			finishOperation();
 		}
 		return objects;
 	}
 
-	protected boolean isEmpty(Class clazz) {
-		boolean result;
-		try {
-			startOperation();
-			result = session.createCriteria(clazz).uniqueResult() == null;
-			transaction.commit();
-		} finally {
-			session.close();
-		}
-		return result;
-	}
-
-	protected Number count(Class clazz) {
-		Number result;
-		try {
-			startOperation();
-			result = (Number) session.createCriteria(clazz)
-					.setProjection(Projections.rowCount())
-					.uniqueResult();
-			transaction.commit();
-		} finally {
-			session.close();
-		}
-		return result;
+	protected void execute() {
+		transaction.commit();
 	}
 
 	/**
@@ -151,22 +121,57 @@ public abstract class AbstractDAO {
 		List objects = null;
 		try {
 			startOperation();
-			Criteria criteria = session.createCriteria(clazz).add(Restrictions.eq(property, value));
-			objects = criteria.list();
-			transaction.commit();
+			objects = session.createCriteria(clazz).add(Restrictions.eq(property, value)).list();
+			execute();
 		} catch (HibernateException exc) {
-			if (transaction != null) transaction.rollback();
+			rollback();
 			throw exc;
 		} finally {
-			session.close();
+			finishOperation();
 		}
 		return objects;
 	}
 
-	private void startOperation() {
-		log.info("+startOperation()");
+	protected boolean isEmpty(Class clazz) {
+		boolean result;
+		try {
+			startOperation();
+			result = session.createCriteria(clazz).uniqueResult() == null;
+			execute();
+		} finally {
+			finishOperation();
+		}
+		return result;
+	}
+
+	protected Number count(Class clazz) {
+		Number result;
+		try {
+			startOperation();
+			result = (Number) session.createCriteria(clazz)
+					.setProjection(Projections.rowCount())
+					.uniqueResult();
+			execute();
+		} finally {
+			finishOperation();
+		}
+		return result;
+	}
+
+	protected void startOperation() {
 		session = HibernateUtil.getSessionFactory().openSession();
 		transaction = session.beginTransaction();
-		log.info("-startOperation()");
+	}
+
+	protected void rollback() {
+		if (transaction != null) transaction.rollback();
+	}
+
+	protected void finishOperation() {
+		session.close();
+	}
+
+	protected Session getCurrentSession() {
+		return session;
 	}
 }

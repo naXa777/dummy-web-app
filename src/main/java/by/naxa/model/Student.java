@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * POJO Student.
@@ -16,7 +16,7 @@ import java.util.List;
 public @Data class Student {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue
 	private Long id;
 
 	@Column(name = "Name",
@@ -33,7 +33,7 @@ public @Data class Student {
 			mappedBy = "student",
 			orphanRemoval = true,
 			cascade = javax.persistence.CascadeType.ALL)
-	private List<Rate> rates;
+	private Collection<Rate> rates;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(

@@ -52,8 +52,9 @@ public class GenericDAO<T> extends AbstractDAO {
 	 * @param name
 	 * @return
 	 */
-	public List<T> findAll(String name) {
-		return (List<T>) super.selectAll(clazz, "name", name);
+	public T find(String name) {
+		List<T> list = (List<T>) super.selectAll(clazz, "name", name);
+		return (list.size() > 0)? list.get(0) : null;
 	}
 
 

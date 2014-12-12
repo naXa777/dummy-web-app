@@ -15,7 +15,7 @@
     <title>University - Add student profile</title>
 </head>
 <body>
-<form name="form1" action="add" method="POST" style="font-size: large">
+<form name="form1" action="${pageContext.request.contextPath}/add" method="POST" style="font-size: large">
     <div align="center">
         <br /><br />
         <label>
@@ -25,7 +25,7 @@
         </label><br />
         <!--label>
             Student's profile photo:
-            <input id="photo" type="image" draggable="true"/>
+            <input id="photo" type="?" draggable="true"/>
         </label><br /-->
         <label>
             Student's faculty:
@@ -42,6 +42,9 @@
         <input name="id" type="hidden" value="${student.id}" />
         <br /><br />
         <button type="submit">Save</button>
+        <a href="${pageContext.request.contextPath}/list">
+            <input type="button" value="Cancel" />
+        </a>
         <br /><br />
     </div>
 </form>

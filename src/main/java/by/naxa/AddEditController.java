@@ -1,6 +1,7 @@
 package by.naxa;
 
 import by.naxa.dao.GenericDAO;
+import by.naxa.dao.StudentDAO;
 import by.naxa.model.Faculty;
 import by.naxa.model.Rate;
 import by.naxa.model.Student;
@@ -44,14 +45,19 @@ public class AddEditController {
 
 		// Find a Faculty by its name
 		GenericDAO<Faculty> facultyDAO = new GenericDAO<Faculty>(Faculty.class);
-		Faculty faculty = facultyDAO.findAll(facultyName).get(0);
+		Faculty faculty = facultyDAO.find(facultyName);
 
 		// Prepare a Student record
-		GenericDAO<Student> studentDAO = new GenericDAO<Student>(Student.class);
+		StudentDAO studentDAO = new StudentDAO();
 		Student newStudent = (id <= 0)? new Student() : studentDAO.find(id);
 
+		// Clear student's rate history
+		GenericDAO<Rate> rateDAO = new GenericDAO<Rate>(Rate.class);
+		Iterable<Rate> existingRates = studentDAO.getRates(newStudent);
+		for (Rate rate : existingRates) rateDAO.delete(rate);
+
 		// Parse rates from the string into a List<>
-		List<String> ratesList = Arrays.asList(ratesString.split("\\s"));
+		Iterable<String> ratesList = Arrays.asList(ratesString.split("\\s"));
 		List<Rate> rates = new LinkedList<Rate>();
 		for (String rateValue : ratesList)
 			try {
@@ -114,7 +120,7 @@ public class AddEditController {
 		mav.addObject("faculties", faculties);
 
 		// Find the student
-		GenericDAO<Student> studentDAO = new GenericDAO<Student>(Student.class);
+		StudentDAO studentDAO = new StudentDAO();
 		Student student = studentDAO.find(id);
 
 		if (student == null) {
@@ -123,7 +129,7 @@ public class AddEditController {
 		}
 
 		mav.addObject("student", student);
-		mav.addObject("rates", StringUtils.join(student.getRates(), " "));
+		mav.addObject("rates", StringUtils.join(studentDAO.getRates(student), " "));
 
 		return mav;
 	}
