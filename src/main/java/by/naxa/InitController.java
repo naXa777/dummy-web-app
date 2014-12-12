@@ -1,7 +1,7 @@
 package by.naxa;
 
-import by.naxa.dao.GenericDAO;
 import by.naxa.model.Faculty;
+import by.naxa.springdao.FacultyDAO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,13 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
 public class InitController {
 
 	/**
-	 * Quickly fill the faculties table.
+	 * Quickly fill the  faculties table.
 	 */
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public ModelAndView init() {
-		GenericDAO<Faculty> facultyDAO = new GenericDAO<Faculty>(Faculty.class);
+		FacultyDAO facultyDAO = new FacultyDAO();
 
-		if (facultyDAO.isEmpty()) {
+		//if (facultyDAO.isEmpty()) {
 			String LeedsFaculties[] = {
 					"Faculty of Arts",
 					"Faculty of Biological Science",
@@ -33,10 +33,10 @@ public class InitController {
 					"Faculty of Performance, Visual Arts and Communication"};
 
 			for (String name : LeedsFaculties)
-				facultyDAO.create(new Faculty(name));
-		}
+				facultyDAO.insert(new Faculty(name));
+		//}
 
-		return new ModelAndView("redirect:/add");
+		return new ModelAndView("redirect:/list");
 	}
 
 }

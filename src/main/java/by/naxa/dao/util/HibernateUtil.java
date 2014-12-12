@@ -1,5 +1,6 @@
 package by.naxa.dao.util;
 
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -37,15 +38,23 @@ public abstract class HibernateUtil {
 	/**
 	 * @see org.hibernate.SessionFactory
 	 */
-	public static synchronized SessionFactory getSessionFactory() {
+	public static @Synchronized SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
 	/**
-	 * Close caches and connection pools
+	 * Close caches and connection pools.
 	 */
 	public static void shutdown() {
 		getSessionFactory().close();
+	}
+
+	/**
+	 * Hidden constructor.
+	 * @throws IllegalAccessException
+	 */
+	private HibernateUtil() throws IllegalAccessException {
+		throw new IllegalAccessException("This class can't be instantiated.");
 	}
 
 }

@@ -1,7 +1,7 @@
 package by.naxa;
 
-import by.naxa.dao.GenericDAO;
 import by.naxa.model.Student;
+import by.naxa.springdao.StudentDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +23,8 @@ public class ListAllController {
 	public ModelAndView students() {
 		ModelAndView mav = new ModelAndView("list");
 
-		GenericDAO<Student> studentDAO = new GenericDAO<Student>(Student.class);
-		List<Student> allStudents = studentDAO.findAll();
+		StudentDAO studentDAO = new StudentDAO();
+		List<Student> allStudents = studentDAO.selectAll();
 		mav.addObject("students", allStudents);
 
 		return mav;
