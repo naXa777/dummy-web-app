@@ -3,7 +3,6 @@ package by.naxa.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -14,7 +13,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Rate")
 @NoArgsConstructor
-@ToString(includeFieldNames = false, exclude = {"id", "student"})
 public @Data class Rate {
 
 	@Id
@@ -29,4 +27,8 @@ public @Data class Rate {
 	@JoinColumn(name = "Student_id", nullable = false)
 	private Student student;
 
+	@Override
+	public String toString() {
+		return Integer.toString(value);
+	}
 }

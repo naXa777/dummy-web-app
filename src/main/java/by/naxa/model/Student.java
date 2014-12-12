@@ -29,7 +29,7 @@ public @Data class Student {
 	private byte[] photo;
 
 	@OneToMany(
-			fetch = FetchType.EAGER,
+			fetch = FetchType.LAZY,
 			mappedBy = "student",
 			orphanRemoval = true,
 			cascade = javax.persistence.CascadeType.ALL)
