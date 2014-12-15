@@ -31,7 +31,7 @@
     <context-param>
         <description>Spring config files</description>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/context/*.xml</param-value>
+        <param-value>/WEB-INF/mvc-dispatcher-servlet.xml</param-value>
     </context-param>
 
     <session-config>

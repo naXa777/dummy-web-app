@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -8,12 +9,13 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx.xsd"
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd"
        default-autowire="byName">
 
-    <context:component-scan base-package="by.naxa" />
+    <context:component-scan base-package="by.naxa.controllers" />
     <context:property-placeholder location="classpath*:db.properties" />
-
 
     <!-- JPA Settings -->
     <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
@@ -21,22 +23,19 @@
         <property name="databasePlatform" value="${jpa.dialect}" />
     </bean>
 
-    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
-
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml" />
         <property name="persistenceUnitName" value="universityPersistenceUnit" />
         <property name="dataSource" ref="dataSource" />
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
-        <property name="jpaDialect" ref="jpaDialect" />
-        <property name="packagesToScan" value="by.naxa.model" />
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+        </property>
     </bean>
 
     <!-- Transaction manager -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory" />
-        <property name="dataSource" ref="dataSource" />
-        <property name="jpaDialect" ref="jpaDialect" />
     </bean>
 
     <!-- @Transactional support -->
@@ -49,5 +48,21 @@
         <property name="username" value="${db.username}" />
         <property name="password" value="${db.password}" />
     </bean>
+
+    <bean id="facultyDao" class="by.naxa.dao.FacultyDAO" />
+    <bean id="facultyRestService" class="by.naxa.services.FacultyService" />
+    <bean id="studentDao" class="by.naxa.dao.StudentDAO" />
+    <bean id="studentRestService" class="by.naxa.services.StudentService" />
+    <bean id="rateDao" class="by.naxa.dao.RateDAO" />
+    <bean id="rateRestService" class="by.naxa.services.RateService" />
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+    <mvc:annotation-driven />
 
 </beans>

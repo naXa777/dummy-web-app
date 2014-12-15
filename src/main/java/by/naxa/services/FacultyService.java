@@ -1,7 +1,7 @@
 package by.naxa.services;
 
+import by.naxa.dao.FacultyDAO;
 import by.naxa.model.Faculty;
-import by.naxa.springdao.FacultyDAO;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

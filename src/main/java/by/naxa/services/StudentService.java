@@ -1,7 +1,7 @@
 package by.naxa.services;
 
+import by.naxa.dao.StudentDAO;
 import by.naxa.model.Student;
-import by.naxa.springdao.StudentDAO;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,11 +17,22 @@ public @Data class StudentService {
 	@Autowired
 	private StudentDAO studentDAO;
 
-	public void addFaculty(Student student) {
+	public void addStudent(Student student) {
 		getStudentDAO().insert(student);
 	}
 
-	public List<Student> fetchAllFaculties() {
+	public void deleteStudent(Student student) {
+		getStudentDAO().delete(student);
+	}
+
+	public Student findStudentById(Long id) {
+		return studentDAO.getById(id);
+	}
+
+	/**
+	 * @return all resources (students) from the database
+	 */
+	public List<Student> fetchAllStudents() {
 		return getStudentDAO().selectAll();
 	}
 }

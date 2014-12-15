@@ -1,8 +1,9 @@
-package by.naxa;
+package by.naxa.controllers;
 
 import by.naxa.model.Student;
-import by.naxa.springdao.StudentDAO;
+import by.naxa.services.StudentService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,12 +20,14 @@ import java.util.List;
 @Slf4j
 public class ListAllController {
 
+	@Autowired
+	StudentService service;
+
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView students() {
 		ModelAndView mav = new ModelAndView("list");
 
-		StudentDAO studentDAO = new StudentDAO();
-		List<Student> allStudents = studentDAO.selectAll();
+		List<Student> allStudents = service.fetchAllStudents();
 		mav.addObject("students", allStudents);
 
 		return mav;

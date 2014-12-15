@@ -1,37 +1,41 @@
 package by.naxa.dao;
 
-import by.naxa.model.Rate;
 import by.naxa.model.Student;
-import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
+import lombok.Data;
+import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
+import java.util.List;
 
 /**
- * Student DAO. Just to fetch initialized list of rates.
  * Created by phomal on 12.12.2014.
  */
-public class StudentDAO extends GenericDAO<Student> {
+@Transactional
+@Repository(value = "studentDAO")
+public @Data class StudentDAO {
 
-	public StudentDAO() {
-		super(Student.class);
+	private static final String SELECT_QUERY = "select s from Student s";
+
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	public void insert(Student student) {
+		entityManager.persist(student);
 	}
 
-	public Collection<Rate> getRates(Student student) {
-		try {
-			startOperation();
+	public void delete(Student student) {
+		entityManager.remove(student);
+	}
 
-			getCurrentSession().update(student);
-			Hibernate.initialize(student.getRates());
+	public List<Student> selectAll() {
+		Query query = entityManager.createQuery(SELECT_QUERY);
+		return (List<Student>) query.getResultList();
+	}
 
-			execute();
-		} catch (HibernateException exc) {
-			rollback();
-			throw exc;
-		} finally {
-			finishOperation();
-		}
-
-		return student.getRates();
+	public Student getById(Long id) {
+		return entityManager.find(Student.class, id);
 	}
 }

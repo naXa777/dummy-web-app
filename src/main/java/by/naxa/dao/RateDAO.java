@@ -1,6 +1,6 @@
-package by.naxa.springdao;
+package by.naxa.dao;
 
-import by.naxa.model.Student;
+import by.naxa.model.Rate;
 import lombok.Data;
 import org.springframework.stereotype.Repository;
 
@@ -14,20 +14,20 @@ import java.util.List;
  * Created by phomal on 12.12.2014.
  */
 @Transactional
-@Repository(value = "studentDAO")
-public @Data class StudentDAO {
+@Repository("rateDAO")
+public @Data class RateDAO {
 
-	private static final String SELECT_QUERY = "select s from Student s";
+	private static final String SELECT_QUERY = "select r from Rate r";
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	public void insert(Student student) {
-		entityManager.persist(student);
+	public void insert(Rate rate) {
+		entityManager.persist(rate);
 	}
 
-	public List<Student> selectAll() {
+	public List<Rate> selectAll() {
 		Query query = entityManager.createQuery(SELECT_QUERY);
-		return (List<Student>) query.getResultList();
+		return (List<Rate>) query.getResultList();
 	}
 }

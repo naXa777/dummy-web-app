@@ -1,7 +1,7 @@
 package by.naxa.services;
 
+import by.naxa.dao.RateDAO;
 import by.naxa.model.Rate;
-import by.naxa.springdao.RateDAO;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,11 +17,11 @@ public @Data class RateService {
 	@Autowired
 	private RateDAO rateDAO;
 
-	public void addFaculty(Rate rate) {
+	public void addRate(Rate rate) {
 		this.getRateDAO().insert(rate);
 	}
 
-	public List<Rate> fetchAllFaculties() {
+	public List<Rate> fetchAllRates() {
 		return this.getRateDAO().selectAll();
 	}
 }

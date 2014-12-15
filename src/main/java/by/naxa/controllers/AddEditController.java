@@ -1,4 +1,4 @@
-package by.naxa;
+package by.naxa.controllers;
 
 import by.naxa.dao.GenericDAO;
 import by.naxa.dao.StudentDAO;

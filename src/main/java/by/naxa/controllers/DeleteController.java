@@ -1,8 +1,9 @@
-package by.naxa;
+package by.naxa.controllers;
 
-import by.naxa.dao.GenericDAO;
 import by.naxa.model.Student;
+import by.naxa.services.StudentService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,14 +18,16 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 public class DeleteController {
 
+	@Autowired
+	StudentService service;
+
 	@RequestMapping(value = "/del/{id:.+}", method = RequestMethod.POST)
 	public ModelAndView deleteStudent(@PathVariable("id") String sid) {
 		Long id = Long.parseLong(sid);
 
 		// "Kill" the student
-		GenericDAO<Student> studentDAO = new GenericDAO<Student>(Student.class);
-		Student sacrifice = studentDAO.find(id);
-		studentDAO.delete(sacrifice);
+		Student sacrifice = service.findStudentById(id);
+		service.deleteStudent(sacrifice);
 
 		// OK. Back to the main page silently
 		return new ModelAndView("redirect:/list");
