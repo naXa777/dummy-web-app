@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-
 /**
  * Web controller.
  * Shows all students as list.
@@ -27,7 +25,7 @@ public class ListAllController {
 	public ModelAndView students() {
 		ModelAndView mav = new ModelAndView("list");
 
-		List<Student> allStudents = service.fetchAllStudents();
+		Iterable<Student> allStudents = service.fetchAllStudents();
 		mav.addObject("students", allStudents);
 
 		return mav;

@@ -6,8 +6,6 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 /**
  * Created by phomal on 12.12.2014.
  */
@@ -18,10 +16,18 @@ public @Data class FacultyService {
 	private FacultyDAO facultyDAO;
 
 	public void addFaculty(Faculty faculty) {
-		getFacultyDAO().insert(faculty);
+		getFacultyDAO().save(faculty);
 	}
 
-	public List<Faculty> fetchAllFaculties() {
-		return getFacultyDAO().selectAll();
+	public Faculty findFaculty(String name) {
+		return getFacultyDAO().findOneByName(name);
+	}
+
+	public boolean isEmpty() {
+		return (getFacultyDAO().count() <= 0);
+	}
+
+	public Iterable<Faculty> fetchAllFaculties() {
+		return getFacultyDAO().findAll();
 	}
 }

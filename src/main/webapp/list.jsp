@@ -1,4 +1,4 @@
-<jsp:useBean id="students" scope="request" type="java.util.List"/>
+<jsp:useBean id="students" scope="request" type="java.lang.Iterable" />
 <%--
   Created by IntelliJ IDEA.
   User: naXa!
@@ -12,7 +12,7 @@
     <title>University - All Students</title>
 </head>
 <body>
-<table title="Students" border="1" cellpadding="16" style="font-size: large">
+<table title="Students table" border="1" cellpadding="16" style="font-size: large; width: 100%">
     <thead>
     <tr>
         <th>
@@ -27,6 +27,15 @@
         </th>
     </tr>
     </thead>
+    <c:if test="${empty students}">
+        <tr>
+            <td colspan="4" style="font-size: medium">
+                Nothing to display here at the moment.
+                Begin with a simple initialization - click <a href="${pageContext.request.contextPath}/init">/init</a>
+                to generate Faculties table. Then you can start adding students (use the "plus" button above).
+            </td>
+        </tr>
+    </c:if>
     <c:forEach items="${students}" var="student">
         <tr>
             <td></td>

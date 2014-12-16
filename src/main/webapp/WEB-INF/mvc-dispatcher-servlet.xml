@@ -49,12 +49,11 @@
         <property name="password" value="${db.password}" />
     </bean>
 
-    <bean id="facultyDao" class="by.naxa.dao.FacultyDAO" />
+    <bean id="facultyDao" class="by.naxa.dao.impl.FacultyDAOJPA2Impl" />
     <bean id="facultyRestService" class="by.naxa.services.FacultyService" />
-    <bean id="studentDao" class="by.naxa.dao.StudentDAO" />
+    <bean id="studentDao" class="by.naxa.dao.impl.StudentDAOJPA2Impl" />
+    <bean id="rateDao" class="by.naxa.dao.impl.RateDAOJPA2Impl" />
     <bean id="studentRestService" class="by.naxa.services.StudentService" />
-    <bean id="rateDao" class="by.naxa.dao.RateDAO" />
-    <bean id="rateRestService" class="by.naxa.services.RateService" />
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />

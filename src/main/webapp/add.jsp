@@ -1,4 +1,4 @@
-<jsp:useBean id="faculties" scope="request" type="java.util.List" />
+<jsp:useBean id="faculties" scope="request" type="java.lang.Iterable" />
 <jsp:useBean id="student" scope="request" class="by.naxa.model.Student" />
 <jsp:useBean id="rates" scope="request" class="java.lang.String" />
 <%--
@@ -12,7 +12,7 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html lang="en">
 <head>
-    <title>University - Add student profile</title>
+    <title>University - ${student.id gt 0? 'Edit' : 'Add'} student profile</title>
 </head>
 <body>
 <form name="form1" action="${pageContext.request.contextPath}/add" method="POST" style="font-size: large">

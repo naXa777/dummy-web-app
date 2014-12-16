@@ -20,13 +20,15 @@ public @Data class Student {
 	private Long id;
 
 	@Column(name = "Name",
-			nullable = false,
-			unique = true)
+			nullable = false/*,
+			unique = true*/)
 	private String name;
+	// Throws MySQLIntegrityConstraintViolationException: Duplicate entry %name% for key 'UK_sswrj5ou6xbmy9u79iwo91vkk'.
+	// TODO: Add exception handling, then uncomment "unique = true".
 
 	@Lob
 	@Column(name = "Photo")
-	private byte[] photo;
+	private byte[] photo;   // TODO: add profile photo support.
 
 	@OneToMany(
 			fetch = FetchType.LAZY,

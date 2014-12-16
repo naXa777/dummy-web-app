@@ -1,12 +1,13 @@
 package by.naxa.controllers;
 
-import by.naxa.dao.GenericDAO;
-import by.naxa.dao.StudentDAO;
 import by.naxa.model.Faculty;
 import by.naxa.model.Rate;
 import by.naxa.model.Student;
+import by.naxa.services.FacultyService;
+import by.naxa.services.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +28,14 @@ import java.util.List;
 @Slf4j
 public class AddEditController {
 
+	@Autowired
+	StudentService studentService;
+	@Autowired
+	FacultyService facultyService;
+
 	/**
 	 * Create new student or update existent.
+	 * TODO: Pass the whole Model. hmm?
 	 * @param sid
 	 * @param name
 	 * @param facultyName
@@ -40,21 +47,13 @@ public class AddEditController {
 	                               @RequestParam(value = "name", required = true) String name,
 	                               @RequestParam(value = "faculty", required = true) String facultyName,
 	                               @RequestParam(value = "rates", required = false) String ratesString) {
-
 		Long id = StringUtils.isEmpty(sid)? 0L : Long.parseLong(sid);
 
+		// Prepare a new Student record
+		Student newStudent = new Student();
+
 		// Find a Faculty by its name
-		GenericDAO<Faculty> facultyDAO = new GenericDAO<Faculty>(Faculty.class);
-		Faculty faculty = facultyDAO.find(facultyName);
-
-		// Prepare a Student record
-		StudentDAO studentDAO = new StudentDAO();
-		Student newStudent = (id <= 0)? new Student() : studentDAO.find(id);
-
-		// Clear student's rate history
-		GenericDAO<Rate> rateDAO = new GenericDAO<Rate>(Rate.class);
-		Iterable<Rate> existingRates = studentDAO.getRates(newStudent);
-		for (Rate rate : existingRates) rateDAO.delete(rate);
+		Faculty faculty = facultyService.findFaculty(facultyName);
 
 		// Parse rates from the string into a List<>
 		Iterable<String> ratesList = Arrays.asList(ratesString.split("\\s"));
@@ -70,15 +69,13 @@ public class AddEditController {
 			}
 
 		// Set student's properties
+		newStudent.setId(id);
 		newStudent.setName(name);
 		newStudent.setFaculty(faculty);
 		newStudent.setRates(rates);
 
-		// Puff!
-		if (id <= 0)
-			studentDAO.create(newStudent);
-		else
-			studentDAO.update(newStudent);
+		// Pass it to the service
+		studentService.addStudent(newStudent);
 
 		// Back to the main page
 		return new ModelAndView("redirect:/list");
@@ -93,8 +90,7 @@ public class AddEditController {
 		ModelAndView mav = new ModelAndView("add");
 
 		// Retrieve a list of faculties
-		GenericDAO<Faculty> facultyDAO = new GenericDAO<Faculty>(Faculty.class);
-		List<Faculty> faculties = facultyDAO.findAll();
+		Iterable<Faculty> faculties = facultyService.fetchAllFaculties();
 		mav.addObject("faculties", faculties);
 
 		// Leave other beans empty
@@ -115,13 +111,11 @@ public class AddEditController {
 		ModelAndView mav = new ModelAndView("add");
 
 		// Retrieve a list of faculties
-		GenericDAO<Faculty> facultyDAO = new GenericDAO<Faculty>(Faculty.class);
-		List<Faculty> faculties = facultyDAO.findAll();
+		Iterable<Faculty> faculties = facultyService.fetchAllFaculties();
 		mav.addObject("faculties", faculties);
 
 		// Find the student
-		StudentDAO studentDAO = new StudentDAO();
-		Student student = studentDAO.find(id);
+		Student student = studentService.findStudentById(id);
 
 		if (student == null) {
 			log.error("Student with id = {} does not exist.", id);
@@ -129,7 +123,7 @@ public class AddEditController {
 		}
 
 		mav.addObject("student", student);
-		mav.addObject("rates", StringUtils.join(studentDAO.getRates(student), " "));
+		mav.addObject("rates", StringUtils.join(studentService.getRates(student), " "));
 
 		return mav;
 	}

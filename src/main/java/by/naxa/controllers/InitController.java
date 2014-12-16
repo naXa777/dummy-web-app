@@ -24,7 +24,7 @@ public class InitController {
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public ModelAndView init() {
 
-		//if (facultyDAO.isEmpty()) {
+		if (service.isEmpty()) {
 			String LeedsFaculties[] = {
 					"Faculty of Arts",
 					"Faculty of Biological Science",
@@ -37,7 +37,7 @@ public class InitController {
 
 			for (String name : LeedsFaculties)
 				service.addFaculty(new Faculty(name));
-		//}
+		}
 
 		return new ModelAndView("redirect:/list");
 	}

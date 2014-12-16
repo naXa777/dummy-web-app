@@ -10,7 +10,7 @@ import java.util.List;
  * Created by phomal on 09.12.2014.
  */
 @Entity
-@Table
+@Table(name = "Faculty")
 @NoArgsConstructor
 @RequiredArgsConstructor
 @EqualsAndHashCode(exclude = {"id", "students"})
