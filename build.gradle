@@ -41,4 +41,5 @@ dependencies {
 
 war {
     webXml = file('src/main/webapp/WEB-INF/web.xml')
+    archiveName = 'university.war'
 }
